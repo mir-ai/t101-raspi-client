@@ -1,0 +1,13 @@
+#!/bin/bash
+
+### 赤のLEDを点灯する
+
+LED_ON=dh
+LED_OFF=dl
+
+LED_RED=16
+LED_GREEN=20
+LED_BLUE=21
+
+echo "LED RED ON."
+/usr/bin/pinctrl $LED_RED op $LED_ON
