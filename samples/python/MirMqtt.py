@@ -39,8 +39,8 @@ class Mqtt:
     # MQTT Client
     mqttc = None
 
-    # MQTT daemon started
-    daemon_started = False
+    # Connected
+    just_connected = False
 
     # MQTTを初期化
     def init(
@@ -58,7 +58,7 @@ class Mqtt:
 
         if rc == 0:
             # 接続したらサブスクライブ開始
-            client.subscribe(Mqtt.TOPIC)
+            #client.subscribe(Mqtt.TOPIC, qos = 1)
 
             # success connect
             print(f"MQTT Connected with result code {rc}, subscribe topic={Mqtt.TOPIC}")
@@ -84,6 +84,7 @@ class Mqtt:
             if sub_result == 1:
                 # process QoS == 1
                 print(f"Broker granted the following QoS: 1")
+
             if sub_result == 0x80:
                 # error processing
                 print(f"Broker rejected you subscription")
@@ -95,15 +96,13 @@ class Mqtt:
         data = {}
         try:
             data = json.loads(msg.payload)
+            print ("MQTT message received", data)
         except Exception as e:
             print(f"MQTT message json corrupted '{msg.payload}'" + str(e))
-        mqtt_updated_timestamp = data.get('last_updated_unixtime', 0)
-
-        print(f"OK MQTT receive updated timestamp={mqtt_updated_timestamp}", 'ST_MQTT_RECV')
 
     def connect_mqtt():
         mqttc = mqtt.Client(protocol=mqtt.MQTTv311)
-        #mqttc.enable_logger()
+        mqttc.enable_logger()
         mqttc.on_connect = Mqtt.on_connect
         mqttc.on_message = Mqtt.on_message
         mqttc.on_disconnect = Mqtt.on_disconnect
@@ -120,8 +119,6 @@ class Mqtt:
             port=Mqtt.PORT, 
             keepalive=Mqtt.KEEP_ALIVE,
         )
-
-        Mqtt.daemon_started = True
 
         return mqttc
 

@@ -23,14 +23,23 @@ Mqtt.init(
     client_id=f"t102_training_{device_cpu_id}"
 )
 
-try:
-    Mqtt.mqttc = Mqtt.connect_mqtt()
-    print(4101, f"OK MQTT thread start, subscribe topic '{Mqtt.TOPIC}'", 'ST_MQTT_START')
-    Mqtt.mqttc.loop_forever()
+while True:
+    try:
+        Mqtt.mqttc = Mqtt.connect_mqtt()
 
-except Exception as e:
-    print(4109, f"NG MQTT thread failed: {e}", 'ERR_MQTT_FAILED')
 
-    # interrupt the main thread
-    interrupt_main()
+        # Subscribe TOPIC
+        Mqtt.mqttc.subscribe(Mqtt.TOPIC, qos = 1)
 
+        print(4101, f"OK MQTT thread start, subscribe topic '{Mqtt.TOPIC}'", 'ST_MQTT_START')
+
+        # Loop forever
+        Mqtt.mqttc.loop_forever()
+
+    except Exception as e:
+        print(4109, f"NG MQTT thread failed: {e}", 'ERR_MQTT_FAILED')
+
+        # interrupt the main thread
+        interrupt_main()
+
+    time.sleep(1)
