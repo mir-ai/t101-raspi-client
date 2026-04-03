@@ -37,7 +37,7 @@ try:
         }
         payload_json_string = json.dumps(payload)
 
-        qos = 1
+        qos = 0
         result = Mqtt.mqttc.publish(Mqtt.TOPIC, payload_json_string, qos)
 
         # result: [0, 1]

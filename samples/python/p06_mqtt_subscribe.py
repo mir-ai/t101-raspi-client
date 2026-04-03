@@ -29,7 +29,7 @@ while True:
 
 
         # Subscribe TOPIC
-        Mqtt.mqttc.subscribe(Mqtt.TOPIC, qos = 1)
+        Mqtt.mqttc.subscribe(Mqtt.TOPIC, qos = 0)
 
         print(4101, f"OK MQTT thread start, subscribe topic '{Mqtt.TOPIC}'", 'ST_MQTT_START')
 
